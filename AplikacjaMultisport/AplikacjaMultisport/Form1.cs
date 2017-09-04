@@ -292,6 +292,7 @@ namespace AppMultisport {
 
         public Form1() {
             InitializeComponent();
+            Text = Application.ProductName;
             try {
                 SetupDepartments();
             } catch (SqlException) {
