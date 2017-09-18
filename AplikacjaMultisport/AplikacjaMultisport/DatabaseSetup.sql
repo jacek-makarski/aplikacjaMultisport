@@ -4,13 +4,16 @@ CREATE TABLE Departments (
 	DepartmentID INT PRIMARY KEY IDENTITY(1,1),
 	Ordering INT NOT NULL DEFAULT 0,  --Numer w kolejnoœci nie musi byæ tu unikalny (³atwiejsza zmiana, stosunkowo niewielka istotnoœæ)
 	Name NVARCHAR(100) UNIQUE NOT NULL,
+	ShortName NVARCHAR(50) UNIQUE
 )
 
 CREATE TABLE Employees (
 	EmployeeID INT PRIMARY KEY IDENTITY(1,1),
 	FirstName NVARCHAR(50) NOT NULL,
 	LastName NVARCHAR(50) NOT NULL,
-	DepartmentID INT FOREIGN KEY REFERENCES Departments(DepartmentID) ON DELETE CASCADE NOT NULL
+	DepartmentID INT FOREIGN KEY REFERENCES Departments(DepartmentID),
+	Retirement BIT NOT NULL,
+	CONSTRAINT CHK_RetirementDepartment CHECK (Retirement = 1 OR DepartmentID IS NOT NULL)  --Informacjê o dziale mo¿na pomin¹æ tylko w przypadku pracowników emerytowanych.
 )
 
 CREATE TABLE CardUpdates (
@@ -53,6 +56,7 @@ RETURN SELECT
 	E.EmployeeID,
 	E.FirstName,
 	E.LastName,
+	E.Retirement,
 	CU.CardActivation,
 	CU.CardType
 	FROM
@@ -68,7 +72,7 @@ RETURN SELECT
 			ON CU.ValidationDate = Recent.RecentValidationDate AND CU.EmployeeID = Recent.EmployeeID
 		JOIN Employees E
 			ON CU.EmployeeID = E.EmployeeID
-		JOIN Departments D
+		LEFT JOIN Departments D  --LEFT JOIN, gdy¿ pracownicy emerytowani mog¹ nie mieæ okreœlonego dzia³u
 			ON E.DepartmentID = D.DepartmentID
 GO
 
@@ -77,7 +81,8 @@ RETURN SELECT
 	E.EmployeeID,
 	E.FirstName,
 	E.LastName,
-	E.DepartmentID
+	E.DepartmentID,
+	E.Retirement
 	FROM
 		(SELECT
 			EmployeeID
@@ -99,6 +104,7 @@ RETURN SELECT
 	E.FirstName,
 	E.LastName,
 	E.DepartmentID,
+	E.Retirement,
 	CU.CardType
 	FROM 
 		(SELECT

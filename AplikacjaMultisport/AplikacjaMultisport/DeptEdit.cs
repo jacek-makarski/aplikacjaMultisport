@@ -15,8 +15,7 @@ namespace AppMultisport {
 
         private void SetupForEmptyList() {
             listBoxDepts.Enabled = false;
-            textBoxDeptName.Enabled = false;
-            textBoxDeptName.Text = string.Empty;
+            buttonRename.Enabled = false;
             buttonRemove.Enabled = false;
             buttonUp.Enabled = false;
             buttonDown.Enabled = false;
@@ -24,55 +23,30 @@ namespace AppMultisport {
 
         private void SetupForNonEmptyList() {
             listBoxDepts.Enabled = true;
-            textBoxDeptName.Enabled = true;
+            buttonRename.Enabled = true;
             buttonRemove.Enabled = true;
         }
 
         private void listBoxDepts_SelectedIndexChanged(object sender, EventArgs e) {
-            textBoxDeptName.Text = ((Dept) listBoxDepts.SelectedItem).Name;
             buttonUp.Enabled = !(listBoxDepts.SelectedIndex == 0);
             buttonDown.Enabled = !(listBoxDepts.SelectedIndex == listBoxDepts.Items.Count - 1);
         }
 
-        private void textBoxDeptName_Validating(object sender, CancelEventArgs e) {
-            if (textBoxDeptName.Text.Equals(string.Empty)) {
-                MessageBox.Show("Nazwa działu nie może być pusta.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                e.Cancel = true;
-            }
-        }
-
-        private void textBoxDeptName_Validated(object sender, EventArgs e) {
-            PreparedUpdate.Rename(listBoxDepts.SelectedIndex, textBoxDeptName.Text);
-            RefreshListBox();
-        }
-
-        private void textBoxDeptName_KeyDown(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Enter) {  //Zatwierdzanie klawiszem Enter
-                listBoxDepts.Focus();
-                e.Handled = e.SuppressKeyPress = true;
-            }
-            if (e.KeyCode == Keys.Escape) {  //Wycofywanie klawiszem Escape
-                textBoxDeptName.CausesValidation = false;
-                textBoxDeptName.Text = listBoxDepts.Items[listBoxDepts.SelectedIndex].ToString();
-                listBoxDepts.Focus();
-                e.Handled = e.SuppressKeyPress = true;
-                textBoxDeptName.CausesValidation = true;
-            }
-        }
-
         private void buttonAddDept_Click(object sender, EventArgs e) {
-            PreparedUpdate.AddDept();
-            RefreshListBox();
-            if (listBoxDepts.Items.Count == 1) {
-                SetupForNonEmptyList();
+            DeptNameDialog dialog = new DeptNameDialog();
+            dialog.DeptName = "Nowy dział";
+            if (dialog.ShowDialog() == DialogResult.OK) {
+                PreparedUpdate.AddDept(dialog.DeptName, dialog.DeptShortName);
+                RefreshListBox();
+                if (listBoxDepts.Items.Count == 1) {
+                    SetupForNonEmptyList();
+                }
+                listBoxDepts.SelectedIndex = listBoxDepts.Items.Count - 1;
             }
-            listBoxDepts.SelectedIndex = listBoxDepts.Items.Count - 1;
-            textBoxDeptName.SelectAll();
-            textBoxDeptName.Focus();
         }
 
         private void buttonRemove_Click(object sender, EventArgs e) {
-            if (MessageBox.Show("Czy na pewno usunąć dział, a także informacje o jego pracownikach i ich historię kart?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) {
+            if (MessageBox.Show("Czy na pewno usunąć dział?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) {
                 PreparedUpdate.DeleteDept(listBoxDepts.SelectedIndex);
                 RefreshListBox();
                 if (listBoxDepts.Items.Count > 0) {
@@ -109,5 +83,16 @@ namespace AppMultisport {
             }
         }
 
+        private void buttonRename_Click(object sender, EventArgs e) {
+            DeptNameDialog dialog = new DeptNameDialog();
+            dialog.DeptName = ((Dept) listBoxDepts.SelectedItem).Name;
+            if (!((Dept) listBoxDepts.SelectedItem).ShortName.Equals(dialog.DeptName)) {
+                dialog.DeptShortName = ((Dept) listBoxDepts.SelectedItem).ShortName;
+            }
+            if (dialog.ShowDialog() == DialogResult.OK) {
+                PreparedUpdate.Rename(listBoxDepts.SelectedIndex, dialog.DeptName, dialog.DeptShortName);
+                RefreshListBox();
+            }
+        }
     }
 }

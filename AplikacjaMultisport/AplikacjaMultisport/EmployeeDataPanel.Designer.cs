@@ -24,6 +24,7 @@
         /// </summary>
         private void InitializeComponent() {
             this.PersonCheckboxGroup = new System.Windows.Forms.GroupBox();
+            this.checkBoxRetirement = new System.Windows.Forms.CheckBox();
             this.comboBoxNewDept = new System.Windows.Forms.ComboBox();
             this.textBoxNewLastName = new System.Windows.Forms.TextBox();
             this.textBoxNewFirstName = new System.Windows.Forms.TextBox();
@@ -35,6 +36,7 @@
             // 
             // PersonCheckboxGroup
             // 
+            this.PersonCheckboxGroup.Controls.Add(this.checkBoxRetirement);
             this.PersonCheckboxGroup.Controls.Add(this.comboBoxNewDept);
             this.PersonCheckboxGroup.Controls.Add(this.textBoxNewLastName);
             this.PersonCheckboxGroup.Controls.Add(this.textBoxNewFirstName);
@@ -44,10 +46,20 @@
             this.PersonCheckboxGroup.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PersonCheckboxGroup.Location = new System.Drawing.Point(0, 0);
             this.PersonCheckboxGroup.Name = "PersonCheckboxGroup";
-            this.PersonCheckboxGroup.Size = new System.Drawing.Size(240, 110);
+            this.PersonCheckboxGroup.Size = new System.Drawing.Size(240, 127);
             this.PersonCheckboxGroup.TabIndex = 14;
             this.PersonCheckboxGroup.TabStop = false;
             this.PersonCheckboxGroup.Text = "Zmiana danych osoby";
+            // 
+            // checkBoxRetirement
+            // 
+            this.checkBoxRetirement.AutoSize = true;
+            this.checkBoxRetirement.Location = new System.Drawing.Point(21, 103);
+            this.checkBoxRetirement.Name = "checkBoxRetirement";
+            this.checkBoxRetirement.Size = new System.Drawing.Size(73, 17);
+            this.checkBoxRetirement.TabIndex = 20;
+            this.checkBoxRetirement.Text = "Emerytura";
+            this.checkBoxRetirement.UseVisualStyleBackColor = true;
             // 
             // comboBoxNewDept
             // 
@@ -119,10 +131,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.PersonCheckboxGroup);
-            this.MaximumSize = new System.Drawing.Size(0, 110);
-            this.MinimumSize = new System.Drawing.Size(240, 110);
+            this.MaximumSize = new System.Drawing.Size(0, 127);
+            this.MinimumSize = new System.Drawing.Size(240, 127);
             this.Name = "EmployeeDataPanel";
-            this.Size = new System.Drawing.Size(240, 110);
+            this.Size = new System.Drawing.Size(240, 127);
             this.PersonCheckboxGroup.ResumeLayout(false);
             this.PersonCheckboxGroup.PerformLayout();
             this.ResumeLayout(false);
@@ -138,5 +150,6 @@
         private System.Windows.Forms.CheckBox checkBoxNewDept;
         private System.Windows.Forms.CheckBox checkBoxLastName;
         private System.Windows.Forms.CheckBox checkBoxFirstName;
+        private System.Windows.Forms.CheckBox checkBoxRetirement;
     }
 }

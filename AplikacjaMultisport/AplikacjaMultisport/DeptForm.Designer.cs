@@ -75,9 +75,11 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(295, 320);
             this.Name = "DeptForm";
+            this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Działy";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DeptForm_FormClosing);
             this.ResumeLayout(false);
 
         }

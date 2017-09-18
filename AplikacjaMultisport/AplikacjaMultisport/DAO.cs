@@ -31,10 +31,14 @@ namespace AppMultisport {
             List<Dept> result = new List<Dept>();
             using (SqlConnection connection = new SqlConnection(connectionString)) {
                 connection.Open();
-                SqlCommand command = new SqlCommand("SELECT DepartmentID, Name FROM Departments ORDER BY Ordering", connection);
+                SqlCommand command = new SqlCommand("SELECT DepartmentID, Name, ShortName FROM Departments ORDER BY Ordering", connection);
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     while (reader.Read()) {
-                        result.Add(new Dept(reader.GetSqlInt32(0), (string) reader.GetSqlString(1)));
+                        if (reader.IsDBNull(2)) {  //Skrócona nazwa jest opcjonalna
+                            result.Add(new Dept(reader.GetSqlInt32(0), (string) reader.GetSqlString(1)));
+                        } else {
+                            result.Add(new Dept(reader.GetSqlInt32(0), (string) reader.GetSqlString(1), (string) reader.GetSqlString(2)));
+                        }
                     }
                 }
             }
@@ -58,6 +62,22 @@ namespace AppMultisport {
             return result;
         }
 
+        public static List<SqlInt32> GetRetiredEmployeeIDs(string firstName, string lastName) {
+            List<SqlInt32> result = new List<SqlInt32>();
+            using (SqlConnection connection = new SqlConnection(connectionString)) {
+                connection.Open();
+                SqlCommand command = new SqlCommand("SELECT EmployeeID FROM Employees WHERE FirstName = @firstName AND LastName = @lastName AND Retirement = 1", connection);
+                command.Parameters.AddWithValue("@firstName", firstName);
+                command.Parameters.AddWithValue("@lastName", lastName);
+                using (SqlDataReader reader = command.ExecuteReader()) {
+                    while (reader.Read()) {
+                        result.Add(reader.GetSqlInt32(0));
+                    }
+                }
+            }
+            return result;
+        }
+
         public static DateTime GetJoinDate(SqlInt32 employeeID) {
             using (SqlConnection connection = new SqlConnection(connectionString)) {
                 connection.Open();
@@ -71,11 +91,11 @@ namespace AppMultisport {
             List<Employee> result = new List<Employee>();
             using (SqlConnection connection = new SqlConnection(connectionString)) {
                 connection.Open();
-                SqlCommand command = new SqlCommand("SELECT EmployeeID, FirstName, LastName, DepartmentID FROM dbo.CardDeactivationsTable(@deactivationMonth)", connection);
+                SqlCommand command = new SqlCommand("SELECT EmployeeID, FirstName, LastName, DepartmentID, Retirement FROM dbo.CardDeactivationsTable(@deactivationMonth)", connection);
                 command.Parameters.AddWithValue("@deactivationMonth", date);
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     while (reader.Read()) {
-                        result.Add(new Employee(reader.GetSqlInt32(0), reader.GetString(1), reader.GetString(2), reader.GetSqlInt32(3)));
+                        result.Add(new Employee(reader.GetSqlInt32(0), reader.GetString(1), reader.GetString(2), reader.GetSqlInt32(3), reader.GetBoolean(4)));
                     }
                 }
             }
@@ -86,14 +106,14 @@ namespace AppMultisport {
             List<EmployeeWithCard> result = new List<EmployeeWithCard>();
             using (SqlConnection connection = new SqlConnection(connectionString)) {
                 connection.Open();
-                SqlCommand command = new SqlCommand("SELECT EmployeeID, FirstName, LastName, DepartmentID, CardType FROM dbo.EmployeesWhoJoined(@monthOfJoining)", connection);
+                SqlCommand command = new SqlCommand("SELECT EmployeeID, FirstName, LastName, DepartmentID, Retirement, CardType FROM dbo.EmployeesWhoJoined(@monthOfJoining)", connection);
                 command.Parameters.AddWithValue("@monthOfJoining", date);
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     while (reader.Read()) {
                         result.Add(
                             new EmployeeWithCard(
-                                new Employee(reader.GetSqlInt32(0), reader.GetString(1), reader.GetString(2), reader.GetSqlInt32(3)),
-                                new Card(true, reader.GetBoolean(4) ? Card.CardType.MultiPlus : Card.CardType.MultiActive)
+                                new Employee(reader.GetSqlInt32(0), reader.GetString(1), reader.GetString(2), reader.GetSqlInt32(3), reader.GetBoolean(4)),
+                                new Card(true, reader.GetBoolean(5) ? Card.CardType.MultiPlus : Card.CardType.MultiActive)
                             )
                         );
                     }
@@ -102,28 +122,37 @@ namespace AppMultisport {
             return result;
         }
 
-        public static List<Report.DeptReport> GetDeptReports(DateTime date) {
-            List<Report.DeptReport> result = new List<Report.DeptReport>();
+        public static Report.FullEmployeesReport GetFullEmployeesReport(DateTime date) {
+            Report.FullEmployeesReport result = new Report.FullEmployeesReport();
             List<Dept> deptList = GetDepartments();
             foreach (Dept currentDept in deptList) {
-                result.Add(new Report.DeptReport(currentDept));
+                result.DeptReports.Add(new Report.DeptReport(currentDept));
             }
             using (SqlConnection connection = new SqlConnection(connectionString)) {
                 connection.Open();
-                SqlCommand command = new SqlCommand("SELECT DeptID, DeptName, EmployeeID, FirstName, LastName, CardType FROM dbo.CardStatusTable(@dayStatusFor) WHERE CardActivation = 1 ORDER BY DeptOrdering", connection);
+                SqlCommand command = new SqlCommand("SELECT DeptID, DeptName, EmployeeID, FirstName, LastName, CardType, Retirement FROM dbo.CardStatusTable(@dayStatusFor) WHERE CardActivation = 1 ORDER BY DeptOrdering", connection);
                 command.Parameters.AddWithValue("@dayStatusFor", date);
                 using (SqlDataReader reader = command.ExecuteReader()) {
                     Report.DeptReport currentDeptReport = null;
                     while (reader.Read()) {
-                        if (currentDeptReport == null || reader.GetSqlInt32(0) != currentDeptReport.Dept.DepartmentID) {
-                            currentDeptReport = Report.FindDeptReport(result, reader.GetSqlInt32(0));
+                        if (reader.GetBoolean(6)) {  //Jeżeli odczytano dane pracownika emerytowanego
+                            result.RetiredEmployeesWithActiveCards.Add(
+                                new EmployeeWithCard(
+                                    new Employee(reader.GetSqlInt32(2), reader.GetString(3), reader.GetString(4), -1, true),
+                                    new Card(true, reader.GetBoolean(5) ? Card.CardType.MultiPlus : Card.CardType.MultiActive)
+                                )
+                            );
+                        } else {
+                            if (currentDeptReport == null || reader.GetSqlInt32(0) != currentDeptReport.Dept.DepartmentID) {
+                                currentDeptReport = Report.FindDeptReport(result.DeptReports, reader.GetSqlInt32(0));
+                            }
+                            currentDeptReport.EmployeesWithActiveCards.Add(
+                                new EmployeeWithCard(
+                                    new Employee(reader.GetSqlInt32(2), reader.GetString(3), reader.GetString(4), currentDeptReport.Dept.DepartmentID, false),
+                                    new Card(true, reader.GetBoolean(5) ? Card.CardType.MultiPlus : Card.CardType.MultiActive)
+                                )
+                            );
                         }
-                        currentDeptReport.EmployeesWithActiveCards.Add(
-                            new EmployeeWithCard(
-                                new Employee(reader.GetSqlInt32(2), reader.GetString(3), reader.GetString(4), currentDeptReport.Dept.DepartmentID),
-                                new Card(true, reader.GetBoolean(5) ? Card.CardType.MultiPlus : Card.CardType.MultiActive)
-                            )
-                        );
                     }
                 }
             }
@@ -160,6 +189,16 @@ namespace AppMultisport {
             }
         }
 
+        public static void UpdateRetirement(SqlInt32 employeeID, bool isRetired) {
+            using (SqlConnection connection = new SqlConnection(connectionString)) {
+                connection.Open();
+                SqlCommand command = new SqlCommand("UPDATE Employees SET Retirement = @isRetired WHERE EmployeeID = @employeeID", connection);
+                command.Parameters.AddWithValue("@isRetired", isRetired);
+                command.Parameters.AddWithValue("@employeeID", employeeID);
+                command.ExecuteNonQuery();
+            }
+        }
+
         public static void DeleteEmployee(SqlInt32 employeeID) {
             using (SqlConnection connection = new SqlConnection(connectionString)) {
                 connection.Open();
@@ -169,16 +208,21 @@ namespace AppMultisport {
             }
         }
 
-        public static void AddNewEmployee(string firstName, string lastName, Dept employeesDept, Card initialCard) {
+        public static void AddNewEmployee(string firstName, string lastName, Dept employeesDept, Card initialCard, bool isRetired) {
             using (SqlConnection connection = new SqlConnection(connectionString)) {
                 connection.Open();
                 using (SqlTransaction transaction = connection.BeginTransaction()) {
 
                     //Dodanie nowego pracownika
-                    SqlCommand command = new SqlCommand("INSERT INTO Employees OUTPUT INSERTED.EmployeeID VALUES (@firstName, @lastName, @deptID)", connection, transaction);
+                    SqlCommand command = new SqlCommand("INSERT INTO Employees (FirstName, LastName, DepartmentID, Retirement) OUTPUT INSERTED.EmployeeID VALUES (@firstName, @lastName, @deptID, @retired)", connection, transaction);
                     command.Parameters.AddWithValue("@firstName", firstName);
                     command.Parameters.AddWithValue("@lastName", lastName);
-                    command.Parameters.AddWithValue("@deptID", employeesDept.DepartmentID);
+                    if (isRetired) {
+                        command.Parameters.AddWithValue("@deptID", DBNull.Value);
+                    } else {
+                        command.Parameters.AddWithValue("@deptID", employeesDept.DepartmentID);
+                    }
+                    command.Parameters.AddWithValue("@retired", isRetired);
                     SqlInt32 employeeID = (int) command.ExecuteScalar();  //Brak rzutowania wywołuje błąd.
 
                     //Dodanie początkowego stanu karty
@@ -265,8 +309,9 @@ namespace AppMultisport {
                             command.Parameters.AddWithValue("@deptName", editedDept.Name);
                             editedDept.DepartmentID = (int) command.ExecuteScalar();
                         } else if (editedDept.Renamed) {
-                            SqlCommand command = new SqlCommand("UPDATE Departments SET Name = @newName WHERE DepartmentID = @deptID", connection, transaction);
+                            SqlCommand command = new SqlCommand("UPDATE Departments SET Name = @newName, ShortName = @newShortName WHERE DepartmentID = @deptID", connection, transaction);
                             command.Parameters.AddWithValue("@newName", editedDept.Name);
+                            command.Parameters.AddWithValue("@newShortName", editedDept.ShortName);
                             command.Parameters.AddWithValue("@deptID", editedDept.DepartmentID);
                             command.ExecuteNonQuery();
                         }

@@ -46,7 +46,7 @@
             this.buttonFindEmployee.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonFindEmployee.AutoSize = true;
-            this.buttonFindEmployee.Location = new System.Drawing.Point(93, 135);
+            this.buttonFindEmployee.Location = new System.Drawing.Point(93, 149);
             this.buttonFindEmployee.Name = "buttonFindEmployee";
             this.buttonFindEmployee.Size = new System.Drawing.Size(98, 23);
             this.buttonFindEmployee.TabIndex = 1;
@@ -60,11 +60,11 @@
             this.buttonDeleteEmployee.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.buttonDeleteEmployee.CausesValidation = false;
             this.buttonDeleteEmployee.Enabled = false;
-            this.buttonDeleteEmployee.Location = new System.Drawing.Point(22, 539);
+            this.buttonDeleteEmployee.Location = new System.Drawing.Point(22, 542);
             this.buttonDeleteEmployee.Name = "buttonDeleteEmployee";
-            this.buttonDeleteEmployee.Size = new System.Drawing.Size(100, 23);
+            this.buttonDeleteEmployee.Size = new System.Drawing.Size(42, 23);
             this.buttonDeleteEmployee.TabIndex = 5;
-            this.buttonDeleteEmployee.Text = "Usuń dane osoby";
+            this.buttonDeleteEmployee.Text = "Usuń";
             this.buttonDeleteEmployee.UseVisualStyleBackColor = true;
             this.buttonDeleteEmployee.Visible = false;
             this.buttonDeleteEmployee.Click += new System.EventHandler(this.buttonDeleteEmployee_Click);
@@ -72,7 +72,7 @@
             // buttonConfirm
             // 
             this.buttonConfirm.Enabled = false;
-            this.buttonConfirm.Location = new System.Drawing.Point(187, 568);
+            this.buttonConfirm.Location = new System.Drawing.Point(197, 542);
             this.buttonConfirm.Name = "buttonConfirm";
             this.buttonConfirm.Size = new System.Drawing.Size(75, 23);
             this.buttonConfirm.TabIndex = 6;
@@ -84,7 +84,7 @@
             // 
             this.buttonCancel.CausesValidation = false;
             this.buttonCancel.Enabled = false;
-            this.buttonCancel.Location = new System.Drawing.Point(106, 568);
+            this.buttonCancel.Location = new System.Drawing.Point(116, 542);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 7;
@@ -140,11 +140,11 @@
             // employeeDataPanel1
             // 
             this.employeeDataPanel1.Enabled = false;
-            this.employeeDataPanel1.Location = new System.Drawing.Point(22, 417);
-            this.employeeDataPanel1.MaximumSize = new System.Drawing.Size(240, 110);
-            this.employeeDataPanel1.MinimumSize = new System.Drawing.Size(240, 110);
+            this.employeeDataPanel1.Location = new System.Drawing.Point(22, 402);
+            this.employeeDataPanel1.MaximumSize = new System.Drawing.Size(240, 125);
+            this.employeeDataPanel1.MinimumSize = new System.Drawing.Size(240, 125);
             this.employeeDataPanel1.Name = "employeeDataPanel1";
-            this.employeeDataPanel1.Size = new System.Drawing.Size(240, 110);
+            this.employeeDataPanel1.Size = new System.Drawing.Size(240, 125);
             this.employeeDataPanel1.TabIndex = 4;
             // 
             // cardStatusPanel1
@@ -160,16 +160,16 @@
             // identityInput1
             // 
             this.identityInput1.Location = new System.Drawing.Point(22, 12);
-            this.identityInput1.MaximumSize = new System.Drawing.Size(0, 120);
-            this.identityInput1.MinimumSize = new System.Drawing.Size(240, 120);
+            this.identityInput1.MaximumSize = new System.Drawing.Size(0, 140);
+            this.identityInput1.MinimumSize = new System.Drawing.Size(240, 140);
             this.identityInput1.Name = "identityInput1";
-            this.identityInput1.Size = new System.Drawing.Size(240, 120);
+            this.identityInput1.Size = new System.Drawing.Size(240, 140);
             this.identityInput1.TabIndex = 0;
             // 
             // narrowDownPanel1
             // 
             this.narrowDownPanel1.Enabled = false;
-            this.narrowDownPanel1.Location = new System.Drawing.Point(40, 174);
+            this.narrowDownPanel1.Location = new System.Drawing.Point(40, 187);
             this.narrowDownPanel1.MinimumSize = new System.Drawing.Size(200, 100);
             this.narrowDownPanel1.Name = "narrowDownPanel1";
             this.narrowDownPanel1.Size = new System.Drawing.Size(200, 103);
@@ -179,7 +179,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 602);
+            this.ClientSize = new System.Drawing.Size(284, 577);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonConfirm);
             this.Controls.Add(this.buttonDeleteEmployee);
@@ -189,6 +189,7 @@
             this.Controls.Add(this.identityInput1);
             this.Controls.Add(this.narrowDownPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Menu = this.mainMenu;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

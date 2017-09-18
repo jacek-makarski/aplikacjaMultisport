@@ -6,7 +6,7 @@ namespace AppMultisport {
 
     public class Report {
 
-        public class DeptReport {
+        public class DeptReport {  //Raport działu - lista pracowników z aktywnymi kartami dla działu
 
             public Dept Dept { get; private set; }
             public List<EmployeeWithCard> EmployeesWithActiveCards { get; private set; }
@@ -18,25 +18,32 @@ namespace AppMultisport {
 
         }
 
+        public class FullEmployeesReport {  //Pełen raport pracowników - raporty działów oraz lista pracowników emerytowanych posiadająych aktywne karty
+
+            public List<DeptReport> DeptReports { get; private set; } = new List<DeptReport>();
+            public List<EmployeeWithCard> RetiredEmployeesWithActiveCards { get; private set; } = new List<EmployeeWithCard>();
+            
+        }
+
         public DateTime Date { get; private set; }
         public List<EmployeeWithCard> EmployeesWhoJoined { get; private set; }
         public List<Employee> EmployeesWhoDeactivatedCards { get; private set; }
-        public List<DeptReport> DeptReports { get; private set; }
-        public int MultiActiveCount { get; private set; }
-        public int MultiPlusCount { get; private set; }
+        public FullEmployeesReport EmployeesReport { get; private set; }
+        public int MultiActiveNotRetiredCount { get; private set; }
+        public int MultiPlusNotRetiredCount { get; private set; }
 
         public Report(DateTime date) {
             Date = date;
             EmployeesWhoJoined = DAO.GetEmployeesWhoJoined(Date);
             EmployeesWhoDeactivatedCards = DAO.GetEmployeesWhoDeactivatedCards(Date);
-            DeptReports = DAO.GetDeptReports(Date);
-            foreach(DeptReport currentDeptReport in DeptReports) {
-                foreach(EmployeeWithCard currentEmployee in currentDeptReport.EmployeesWithActiveCards) {
+            EmployeesReport = DAO.GetFullEmployeesReport(Date);
+            foreach (DeptReport currentDeptReport in EmployeesReport.DeptReports) {
+                foreach (EmployeeWithCard currentEmployee in currentDeptReport.EmployeesWithActiveCards) {
                     if (currentEmployee.Card.Type == Card.CardType.MultiActive) {
-                        ++MultiActiveCount;
+                        ++MultiActiveNotRetiredCount;
                     }
                     if (currentEmployee.Card.Type == Card.CardType.MultiPlus) {  //Alternatywnie: else
-                        ++MultiPlusCount;
+                        ++MultiPlusNotRetiredCount;
                     }
                 }
             }

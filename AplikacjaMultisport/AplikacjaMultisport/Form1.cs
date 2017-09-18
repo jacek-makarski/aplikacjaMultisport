@@ -24,13 +24,17 @@ namespace AppMultisport {
 
         //Kliknięcie przycisku "Dalej" po podaniu danych pracownika
         private void buttonFindEmployee_Click(object sender, EventArgs e) {
-            if (identityInput1.FirstName.Equals(string.Empty) || identityInput1.LastName.Equals(String.Empty) || !identityInput1.DepartmentSelected) {
+            if (identityInput1.FirstName.Equals(string.Empty) || identityInput1.LastName.Equals(String.Empty) || (!identityInput1.DepartmentSelected && !identityInput1.Retired)) {
                 MessageBox.Show("Dane pracownika muszą być kompletne.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             } else {
                 identityInput1.Enabled = false;
                 buttonFindEmployee.Enabled = false;
                 try {
-                    foundEmployeeIDs = DAO.GetEmployeeIDs(identityInput1.FirstName, identityInput1.LastName, identityInput1.Department);
+                    if (identityInput1.Retired) {
+                        foundEmployeeIDs = DAO.GetRetiredEmployeeIDs(identityInput1.FirstName, identityInput1.LastName);
+                    } else {
+                        foundEmployeeIDs = DAO.GetEmployeeIDs(identityInput1.FirstName, identityInput1.LastName, identityInput1.Department);
+                    }
                     string addAsNewPersonStr = "Dodaj jako nową osobę";
                     switch (foundEmployeeIDs.Count) {
                         case 0:  //Na pewno nowy pracownik - od razu przejdź do ustawiania karty
@@ -104,6 +108,7 @@ namespace AppMultisport {
             }
             cardStatusPanel1.Enabled = true;
             employeeDataPanel1.Enabled = true;
+            employeeDataPanel1.SetRetirement(identityInput1.Retired);
             buttonDeleteEmployee.Enabled = true;
             buttonConfirm.Enabled = true;
             buttonCancel.Enabled = true;
@@ -111,14 +116,28 @@ namespace AppMultisport {
 
         private void buttonConfirm_Click(object sender, EventArgs e) {
             try {
-                if ((employeeDataPanel1.ChangingFirstName && employeeDataPanel1.NewFirstName.Equals(string.Empty)) || (employeeDataPanel1.ChangingLastName && employeeDataPanel1.NewLastName.Equals(string.Empty))) {
-                    MessageBox.Show("Dane pracownika nie mogą być puste.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (
+                    (employeeDataPanel1.ChangingFirstName && employeeDataPanel1.NewFirstName.Equals(string.Empty)) 
+                    || 
+                    (employeeDataPanel1.ChangingLastName && employeeDataPanel1.NewLastName.Equals(string.Empty))
+                    ||
+                    (identityInput1.Retired && employeeDataPanel1.ChangingRetirement && !employeeDataPanel1.ChangingDept)
+                ) {
+                    if (identityInput1.Retired && employeeDataPanel1.ChangingRetirement && !employeeDataPanel1.ChangingDept) {
+                        MessageBox.Show("Proszę określić dział pracownika powracającego z emerytury.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    } else {
+                        MessageBox.Show("Dane pracownika nie mogą być puste.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 } else {
                     bool deadlineOK = true;
                     if (addingNewEmployee) {
                         deadlineOK = Rules.CheckDeadline(DateTime.Today, Card.TypeOfChange.TypeChange);
                         if (deadlineOK) {
-                            DAO.AddNewEmployee(identityInput1.FirstName, identityInput1.LastName, identityInput1.Department, new Card(cardStatusPanel1.SelectedOption));
+                            if (identityInput1.Retired) {
+                               DAO.AddNewEmployee(identityInput1.FirstName, identityInput1.LastName, null, new Card(cardStatusPanel1.SelectedOption), true);
+                            } else {
+                                DAO.AddNewEmployee(identityInput1.FirstName, identityInput1.LastName, identityInput1.Department, new Card(cardStatusPanel1.SelectedOption), false);
+                            }
                         } else {
                             MessageBox.Show(Rules.DeadlineMessage(Card.TypeOfChange.TypeChange), Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
@@ -187,8 +206,6 @@ namespace AppMultisport {
                             }
                         }
 
-                        
-
                         if (deadlineOK) {
                             if (employeeDataPanel1.ChangingFirstName) {
                                 DAO.UpdateFirstName(selectedEmployeeID, employeeDataPanel1.NewFirstName);
@@ -198,7 +215,10 @@ namespace AppMultisport {
                             }
                             if (employeeDataPanel1.ChangingDept) {
                                 DAO.UpdateEmployeesDepartment(selectedEmployeeID, employeeDataPanel1.NewDept);
-                            }    
+                            }
+                            if (employeeDataPanel1.ChangingRetirement) {
+                                DAO.UpdateRetirement(selectedEmployeeID, !identityInput1.Retired);
+                            }
                         }
 
                         ReturnToStart();
