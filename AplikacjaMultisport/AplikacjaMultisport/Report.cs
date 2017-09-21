@@ -26,6 +26,7 @@ namespace AppMultisport {
         }
 
         public DateTime Date { get; private set; }
+        public decimal InvoiceTotal { get; private set; }
         public List<EmployeeWithCard> EmployeesWhoJoined { get; private set; }
         public List<Employee> EmployeesWhoDeactivatedCards { get; private set; }
         public FullEmployeesReport EmployeesReport { get; private set; }
@@ -47,6 +48,30 @@ namespace AppMultisport {
                     }
                 }
             }
+
+            decimal retiredTotal = 0;
+            foreach (EmployeeWithCard currentRetiredEmployee in EmployeesReport.RetiredEmployeesWithActiveCards) {
+                if (currentRetiredEmployee.Card.Type == Card.CardType.MultiActive) {
+                    retiredTotal += Rules.MultiActivePrice;
+                }
+                if (currentRetiredEmployee.Card.Type == Card.CardType.MultiPlus) {
+                    retiredTotal += Rules.MultiPlusPrice;
+                }
+            }
+            decimal? invoiceTotalOrNull = DAO.GetInvoiceTotalOrNull(date);
+            InvoiceTotalDialog dialog = new InvoiceTotalDialog();
+            dialog.Summary = MultiActiveNotRetiredCount * Rules.MultiActivePrice + MultiPlusNotRetiredCount * Rules.MultiPlusPrice + retiredTotal;
+            if (invoiceTotalOrNull != null) {
+                dialog.InvoiceTotal = invoiceTotalOrNull.Value;
+                dialog.ShowDialog();
+                if (dialog.InvoiceTotal != invoiceTotalOrNull.Value) {
+                    DAO.UpdateInvoiceTotal(date, dialog.InvoiceTotal);
+                }
+            } else {
+                dialog.ShowDialog();
+                DAO.AddInvoiceTotal(date, dialog.InvoiceTotal);
+            }
+            InvoiceTotal = dialog.InvoiceTotal;
         }
 
         public static DeptReport FindDeptReport(List<DeptReport> deptReportList, SqlInt32 deptID) {
@@ -56,7 +81,7 @@ namespace AppMultisport {
                 }
             }
             throw new KeyNotFoundException();
-        }      
+        }
         
     }
 

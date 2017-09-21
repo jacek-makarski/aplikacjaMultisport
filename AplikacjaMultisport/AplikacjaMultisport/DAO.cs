@@ -341,6 +341,41 @@ namespace AppMultisport {
             }
         }
 
+        public static decimal? GetInvoiceTotalOrNull(DateTime date) {
+            using (SqlConnection connection = new SqlConnection(connectionString)) {
+                connection.Open();
+                SqlCommand command = new SqlCommand("SELECT Total FROM InvoiceTotals WHERE InvoiceDate = @invoiceDate", connection);
+                command.Parameters.AddWithValue("@invoiceDate", date);
+                using (SqlDataReader reader = command.ExecuteReader()) {
+                    if (reader.Read()) {
+                        return reader.GetDecimal(0);
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        }
+        
+        public static void AddInvoiceTotal(DateTime date, decimal total) {
+            using (SqlConnection connection = new SqlConnection(connectionString)) {
+                connection.Open();
+                SqlCommand command = new SqlCommand("INSERT INTO InvoiceTotals (InvoiceDate, Total) VALUES (@invoiceDate, @total)", connection);
+                command.Parameters.AddWithValue("@invoiceDate", date);
+                command.Parameters.AddWithValue("@total", total);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public static void UpdateInvoiceTotal(DateTime date, decimal total) {
+            using (SqlConnection connection = new SqlConnection(connectionString)) {
+                connection.Open();
+                SqlCommand command = new SqlCommand("UPDATE InvoiceTotals SET Total = @total WHERE InvoiceDate = @invoiceDate", connection);
+                command.Parameters.AddWithValue("@invoiceDate", date);
+                command.Parameters.AddWithValue("@total", total);
+                command.ExecuteNonQuery();
+            }
+        }
+
     }
 
 }

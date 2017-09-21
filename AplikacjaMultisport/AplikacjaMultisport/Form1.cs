@@ -268,7 +268,7 @@ namespace AppMultisport {
         }
 
         private void menuItemGenerateCurrent_Click(object sender, EventArgs e) {
-            CreateReportFile(DateTime.Today);
+            CreateReportFile(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1));
         }
 
         private void menuItemGenerateForSelectedMonth_Click(object sender, EventArgs e) {
