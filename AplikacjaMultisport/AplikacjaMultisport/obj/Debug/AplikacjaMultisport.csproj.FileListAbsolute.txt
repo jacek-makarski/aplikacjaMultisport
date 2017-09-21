@@ -20,3 +20,4 @@ C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaM
 C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AppMultisport.DeptNameDialog.resources
 C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AppMultisport.InvoiceTotalDialog.resources
 C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AppMultisport.InvoiceTotalUpDown.resources
+C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AppMultisport.ExtendedCardStatusTable.resources

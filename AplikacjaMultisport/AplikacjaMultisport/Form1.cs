@@ -29,6 +29,7 @@ namespace AppMultisport {
             } else {
                 identityInput1.Enabled = false;
                 buttonFindEmployee.Enabled = false;
+                menuItemEditDepts.Enabled = false;
                 try {
                     if (identityInput1.Retired) {
                         foundEmployeeIDs = DAO.GetRetiredEmployeeIDs(identityInput1.FirstName, identityInput1.LastName);
@@ -64,7 +65,6 @@ namespace AppMultisport {
 
         private void identityNarrowDownPanel1_NextClick(object sender, EventArgs e) {
             narrowDownPanel1.Enabled = false;
-            menuItemEditDepts.Enabled = false;
             if (narrowDownPanel1.ListBoxEmployees.SelectedIndex == foundEmployeeIDs.Count) {  //Jeżeli została wybrana opcja dodania nowej osoby
                 EditNewEmployee();
             } else {  //Jeżeli została wybrana któraś z już zarejestrowanych osób
@@ -323,6 +323,21 @@ namespace AppMultisport {
             narrowDownPanel1.ButtonCancelClick += new EventHandler(identityNarrowDownPanel1_CancelClick);
         }
 
+        private void tabControl_SelectedIndexChanged(object sender, EventArgs e) {
+            if (tabControl.SelectedIndex == 0) {
+                tabControl.Dock = DockStyle.None;
+                tabControl.Width = 300;
+                tabControl.Height = 588;
+                FormBorderStyle = FormBorderStyle.FixedSingle;
+                Width = 314;
+                Height = 647;
+            }
+            if (tabControl.SelectedIndex == 1) {
+                FormBorderStyle = FormBorderStyle.Sizable;
+                tabControl.Dock = DockStyle.Fill;
+                extendedCardStatusTable1.RefreshTable();
+            }
+        }
     }
 
 }
