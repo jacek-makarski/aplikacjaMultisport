@@ -71,6 +71,12 @@
     <Compile Include="CardStatusRadioPanel.Designer.cs">
       <DependentUpon>CardStatusRadioPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExtendedCardStatusTable.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExtendedCardStatusTable.Designer.cs">
+      <DependentUpon>ExtendedCardStatusTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="DAO.cs" />
     <Compile Include="DeptEdit.cs">
       <SubType>UserControl</SubType>
@@ -84,8 +90,26 @@
     <Compile Include="DeptForm.Designer.cs">
       <DependentUpon>DeptForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="DeptNameDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeptNameDialog.Designer.cs">
+      <DependentUpon>DeptNameDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditedDept.cs" />
     <Compile Include="DeptUpdate.cs" />
+    <Compile Include="InvoiceTotalDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InvoiceTotalDialog.Designer.cs">
+      <DependentUpon>InvoiceTotalDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InvoiceTotalUpDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="InvoiceTotalUpDown.Designer.cs">
+      <DependentUpon>InvoiceTotalUpDown.cs</DependentUpon>
+    </Compile>
     <Compile Include="MonthDateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -134,11 +158,23 @@
     <EmbeddedResource Include="CardStatusRadioPanel.resx">
       <DependentUpon>CardStatusRadioPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedCardStatusTable.resx">
+      <DependentUpon>ExtendedCardStatusTable.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DeptEdit.resx">
       <DependentUpon>DeptEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DeptForm.resx">
       <DependentUpon>DeptForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeptNameDialog.resx">
+      <DependentUpon>DeptNameDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InvoiceTotalDialog.resx">
+      <DependentUpon>InvoiceTotalDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InvoiceTotalUpDown.resx">
+      <DependentUpon>InvoiceTotalUpDown.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MonthDateDialog.resx">
       <DependentUpon>MonthDateDialog.cs</DependentUpon>

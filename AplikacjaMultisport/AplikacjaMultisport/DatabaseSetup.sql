@@ -4,21 +4,29 @@ CREATE TABLE Departments (
 	DepartmentID INT PRIMARY KEY IDENTITY(1,1),
 	Ordering INT NOT NULL DEFAULT 0,  --Numer w kolejnoœci nie musi byæ tu unikalny (³atwiejsza zmiana, stosunkowo niewielka istotnoœæ)
 	Name NVARCHAR(100) UNIQUE NOT NULL,
+	ShortName NVARCHAR(50) UNIQUE
 )
 
 CREATE TABLE Employees (
 	EmployeeID INT PRIMARY KEY IDENTITY(1,1),
 	FirstName NVARCHAR(50) NOT NULL,
 	LastName NVARCHAR(50) NOT NULL,
-	DepartmentID INT FOREIGN KEY REFERENCES Departments(DepartmentID) ON DELETE CASCADE NOT NULL
+	DepartmentID INT FOREIGN KEY REFERENCES Departments(DepartmentID),
+	Retirement BIT NOT NULL,
+	CONSTRAINT CHK_RetirementDepartment CHECK (Retirement = 1 OR DepartmentID IS NOT NULL)  --Informacjê o dziale mo¿na pomin¹æ tylko w przypadku pracowników emerytowanych.
 )
 
 CREATE TABLE CardUpdates (
-	ValidationDate DATE NOT NULL,
+	ValidationDate DATE NOT NULL CHECK (DAY(ValidationDate) = 1),
 	EmployeeID INT FOREIGN KEY REFERENCES Employees(EmployeeID) ON DELETE CASCADE NOT NULL,
 	CardActivation BIT NOT NULL,
 	CardType BIT NOT NULL,
 	PRIMARY KEY (ValidationDate, EmployeeID)
+)
+
+CREATE TABLE InvoiceTotals (
+	InvoiceDate DATE PRIMARY KEY CHECK (DAY(InvoiceDate) = 1),
+	Total MONEY NOT NULL
 )
 
 CREATE INDEX EmployeeIndex ON CardUpdates (EmployeeID)
@@ -50,9 +58,11 @@ RETURN SELECT
 	D.DepartmentID DeptID,
 	D.Ordering DeptOrdering,
 	D.Name DeptName,
+	D.ShortName ShortDeptName,
 	E.EmployeeID,
 	E.FirstName,
 	E.LastName,
+	E.Retirement,
 	CU.CardActivation,
 	CU.CardType
 	FROM
@@ -68,7 +78,7 @@ RETURN SELECT
 			ON CU.ValidationDate = Recent.RecentValidationDate AND CU.EmployeeID = Recent.EmployeeID
 		JOIN Employees E
 			ON CU.EmployeeID = E.EmployeeID
-		JOIN Departments D
+		LEFT JOIN Departments D  --LEFT JOIN, gdy¿ pracownicy emerytowani mog¹ nie mieæ okreœlonego dzia³u
 			ON E.DepartmentID = D.DepartmentID
 GO
 
@@ -77,7 +87,8 @@ RETURN SELECT
 	E.EmployeeID,
 	E.FirstName,
 	E.LastName,
-	E.DepartmentID
+	E.DepartmentID,
+	E.Retirement
 	FROM
 		(SELECT
 			EmployeeID
@@ -99,6 +110,7 @@ RETURN SELECT
 	E.FirstName,
 	E.LastName,
 	E.DepartmentID,
+	E.Retirement,
 	CU.CardType
 	FROM 
 		(SELECT
@@ -115,3 +127,44 @@ RETURN SELECT
 			ON DatesOfJoining.MonthJoined = CU.ValidationDate AND DatesOfJoining.EmployeeID = CU.EmployeeID
 		JOIN Employees E
 			ON DatesOfJoining.EmployeeID = E.EmployeeID;
+
+GO
+CREATE FUNCTION dbo.ExtendedCardStatusTable(@DayStatusFor DATE, @NextValidationDate DATE) RETURNS TABLE AS
+RETURN SELECT
+	E.EmployeeID,
+	E.LastName,
+	E.FirstName,
+	E.Retirement,
+	D.DepartmentID,
+	D.Ordering,
+	D.Name DeptName,
+	D.ShortName DeptShortName,
+	CU.CardActivation,
+	CU.CardType,
+	Planned.CardActivation PlannedCardActivation,
+	Planned.CardType PlannedCardType
+	FROM
+		Employees E
+		LEFT JOIN (
+			SELECT 
+				MAX(ValidationDate) AS RecentValidationDate,
+				EmployeeID
+				FROM CardUpdates
+				WHERE ValidationDate <= @DayStatusFor
+				GROUP BY EmployeeID
+		) Recent
+			ON E.EmployeeID = Recent.EmployeeID
+		LEFT JOIN CardUpdates CU
+			ON CU.ValidationDate = Recent.RecentValidationDate AND CU.EmployeeID = Recent.EmployeeID
+		LEFT JOIN (
+			SELECT
+				EmployeeID,
+				CardActivation,
+				CardType
+				FROM CardUpdates
+				WHERE ValidationDate = @NextValidationDate
+		) Planned
+			ON E.EmployeeID = Planned.EmployeeID
+		LEFT JOIN Departments D  --LEFT JOIN, gdy¿ pracownicy emerytowani mog¹ nie mieæ okreœlonego dzia³u
+			ON E.DepartmentID = D.DepartmentID
+GO

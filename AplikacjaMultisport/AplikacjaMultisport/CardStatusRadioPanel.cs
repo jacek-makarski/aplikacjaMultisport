@@ -45,7 +45,9 @@ namespace AppMultisport {
         }
 
         public void SetupForCard(Card currentCard) {
-            RadioButtonOfCard(currentCard).Text += " (aktualny)";
+            RadioButton currentRadio = RadioButtonOfCard(currentCard);
+            currentRadio.Text += " (aktualny)";
+            currentRadio.Checked = true;
         }
 
         public void SetupForCards(Card currentCard, Card plannedCard) {

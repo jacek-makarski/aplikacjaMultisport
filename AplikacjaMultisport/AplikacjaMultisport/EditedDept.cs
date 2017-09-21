@@ -7,14 +7,14 @@ namespace AppMultisport {
         public bool Added { get; set; } = false;
         public bool Renamed { get; set; } = false;
 
-        public EditedDept(SqlInt32 ID, string name) : base(ID, name) {
+        public EditedDept(SqlInt32 ID, string name, string shortName) : base(ID, name, shortName) {
         }
 
-        public EditedDept(string name) : base(0, name) {
+        public EditedDept(string name, string shortName) : base(0, name, shortName) {
             Added = true;
         }
 
-        public EditedDept(Dept deptToEdit) : base(deptToEdit.DepartmentID, deptToEdit.Name) {
+        public EditedDept(Dept deptToEdit) : base(deptToEdit.DepartmentID, deptToEdit.Name, deptToEdit.ShortName) {
         }
 
     }

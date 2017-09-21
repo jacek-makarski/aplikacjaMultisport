@@ -3,7 +3,6 @@ C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaM
 C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\bin\Debug\AplikacjaMultisport.pdb
 C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\bin\Debug\EPPlus.dll
 C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\bin\Debug\EPPlus.xml
-C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AplikacjaMultisport.csprojResolveAssemblyReference.cache
 C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AppMultisport.CardStatusRadioPanel.resources
 C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AppMultisport.DeptEdit.resources
 C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AppMultisport.DeptForm.resources
@@ -17,3 +16,8 @@ C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaM
 C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AplikacjaMultisport.exe
 C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AplikacjaMultisport.pdb
 C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AppMultisport.Properties.Resources.resources
+C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AplikacjaMultisport.csprojResolveAssemblyReference.cache
+C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AppMultisport.DeptNameDialog.resources
+C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AppMultisport.InvoiceTotalDialog.resources
+C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AppMultisport.InvoiceTotalUpDown.resources
+C:\Users\Artur\OneDrive\Dokumenty\Studia\Praktyki\AplikacjaMultisport\AplikacjaMultisport\obj\Debug\AppMultisport.ExtendedCardStatusTable.resources
