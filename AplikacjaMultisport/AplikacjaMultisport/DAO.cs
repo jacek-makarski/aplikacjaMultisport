@@ -376,6 +376,39 @@ namespace AppMultisport {
             }
         }
 
+        public static List<ExtendedCardStatusTable.TableRow> GetExtendedCardStatusTable() {
+            List<ExtendedCardStatusTable.TableRow> result = new List<ExtendedCardStatusTable.TableRow>();
+            using (SqlConnection connection = new SqlConnection(connectionString)) {
+                connection.Open();
+                SqlCommand command = new SqlCommand("SELECT EmployeeID, FirstName, LastName, DepartmentID, Retirement, DeptName, DeptShortName, CardActivation, CardType, PlannedCardActivation, PlannedCardType FROM dbo.ExtendedCardStatusTable(GETDATE(), " + sqlFirstDayOfNextMonth + ")", connection);
+                using (SqlDataReader reader = command.ExecuteReader()) {
+                    while (reader.Read()) {
+                        Card currentCard = null;
+                        if (!reader.IsDBNull(7)) {
+                            currentCard = new Card(reader.GetBoolean(7), reader.GetBoolean(8) ? Card.CardType.MultiPlus : Card.CardType.MultiActive);
+                        }
+                        Card plannedCard = null;
+                        if (!reader.IsDBNull(9)) {
+                            plannedCard = new Card(reader.GetBoolean(9), reader.GetBoolean(10) ? Card.CardType.MultiPlus : Card.CardType.MultiActive);
+                        }
+                        Dept rowDept = null;
+                        if (!reader.IsDBNull(3)) {
+                            rowDept = new Dept(reader.GetSqlInt32(3), reader.GetString(5), reader.GetString(6));
+                        }
+                        result.Add(
+                            new ExtendedCardStatusTable.TableRow(
+                                new Employee(reader.GetSqlInt32(0), reader.GetString(1), reader.GetString(2), reader.GetSqlInt32(3), reader.GetBoolean(4)),
+                                rowDept,
+                                currentCard,
+                                plannedCard
+                            )
+                        );
+                    }
+                }
+            }
+            return result;
+        }
+
     }
 
 }

@@ -71,6 +71,12 @@
     <Compile Include="CardStatusRadioPanel.Designer.cs">
       <DependentUpon>CardStatusRadioPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExtendedCardStatusTable.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ExtendedCardStatusTable.Designer.cs">
+      <DependentUpon>ExtendedCardStatusTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="DAO.cs" />
     <Compile Include="DeptEdit.cs">
       <SubType>UserControl</SubType>
@@ -151,6 +157,9 @@
     <Compile Include="Rules.cs" />
     <EmbeddedResource Include="CardStatusRadioPanel.resx">
       <DependentUpon>CardStatusRadioPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedCardStatusTable.resx">
+      <DependentUpon>ExtendedCardStatusTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DeptEdit.resx">
       <DependentUpon>DeptEdit.cs</DependentUpon>
