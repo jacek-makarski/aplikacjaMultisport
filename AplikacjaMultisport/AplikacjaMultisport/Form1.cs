@@ -55,8 +55,8 @@ namespace AppMultisport {
                             narrowDownPanel1.Enabled = true;
                             break;
                     }
-                } catch (SqlException) {
-                    ShowDatabaseErrorMessage();
+                } catch (SqlException exception) {
+                    ShowDatabaseErrorMessage(exception);
                     ReturnToStart();
                 }
             }
@@ -72,8 +72,8 @@ namespace AppMultisport {
                 try {
                     currentCard = DAO.GetCardOrNull(DateTime.Today, selectedEmployeeID);
                     alreadyPlannedCard = DAO.GetPlannedCardOrNull(selectedEmployeeID);
-                } catch (SqlException) {
-                    ShowDatabaseErrorMessage();
+                } catch (SqlException exception) {
+                    ShowDatabaseErrorMessage(exception);
                     ReturnToStart();
                 }
                 EditRegisteredEmployee();
@@ -224,8 +224,8 @@ namespace AppMultisport {
                         ReturnToStart();
                     }
                 }
-            } catch (SqlException) {
-                ShowDatabaseErrorMessage();
+            } catch (SqlException exception) {
+                ShowDatabaseErrorMessage(exception);
                 ReturnToStart();
             }
 
@@ -240,8 +240,8 @@ namespace AppMultisport {
             if (MessageBox.Show("Czy na pewno usunąć z bazy dane i historię kart tego pracownika?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes) {
                 try {
                     DAO.DeleteEmployee(selectedEmployeeID);
-                } catch (SqlException) {
-                    ShowDatabaseErrorMessage();
+                } catch (SqlException exception) {
+                    ShowDatabaseErrorMessage(exception);
                 }
                 ReturnToStart();
             }
@@ -286,10 +286,10 @@ namespace AppMultisport {
                 if (saveFileDialog.ShowDialog() == DialogResult.OK) {
                     fileWriter.CreateOrOverwriteFile(saveFileDialog.FileName, report);
                 }
-            } catch (SqlException) {
-                ShowDatabaseErrorMessage();
-            } catch (IOException) {
-                MessageBox.Show("Wystąpił błąd podczas zapisywania pliku.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch (SqlException exception) {
+                ShowDatabaseErrorMessage(exception);
+            } catch (IOException exception) {
+                MessageBox.Show("Wystąpił błąd podczas zapisywania pliku: " + exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -300,14 +300,14 @@ namespace AppMultisport {
                 if (dialog.ShowDialog() == DialogResult.OK) {
                     SetupDepartments();
                 }
-            } catch (SqlException) {
-                ShowDatabaseErrorMessage();
+            } catch (SqlException exception) {
+                ShowDatabaseErrorMessage(exception);
                 Application.Exit();
             }
         }
 
-        private void ShowDatabaseErrorMessage() {
-            MessageBox.Show("Wystąpił błąd przy komunikacji z bazą danych.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        private void ShowDatabaseErrorMessage(SqlException exception) {
+            MessageBox.Show("Wystąpił błąd przy komunikacji z bazą danych: " + exception.Message, Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public Form1() {
@@ -315,8 +315,8 @@ namespace AppMultisport {
             Text = Application.ProductName;
             try {
                 SetupDepartments();
-            } catch (SqlException) {
-                ShowDatabaseErrorMessage();
+            } catch (SqlException e) {
+                ShowDatabaseErrorMessage(e);
                 Environment.Exit(0);
             }
             narrowDownPanel1.ButtonNextClick += new EventHandler(identityNarrowDownPanel1_NextClick);

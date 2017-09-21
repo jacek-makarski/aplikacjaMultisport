@@ -35,13 +35,22 @@ namespace AppMultisport {
         private void buttonAddDept_Click(object sender, EventArgs e) {
             DeptNameDialog dialog = new DeptNameDialog();
             dialog.DeptName = "Nowy dział";
-            if (dialog.ShowDialog() == DialogResult.OK) {
-                PreparedUpdate.AddDept(dialog.DeptName, dialog.DeptShortName);
-                RefreshListBox();
-                if (listBoxDepts.Items.Count == 1) {
-                    SetupForNonEmptyList();
+            bool continueInput = true;
+            while (continueInput) {
+                if (dialog.ShowDialog() == DialogResult.OK) {
+                    if (PreparedUpdate.AddDeptIfUnique(dialog.DeptName, dialog.DeptShortName)) {
+                        continueInput = false;
+                        RefreshListBox();
+                        if (listBoxDepts.Items.Count == 1) {
+                            SetupForNonEmptyList();
+                        }
+                        listBoxDepts.SelectedIndex = listBoxDepts.Items.Count - 1;
+                    } else {
+                        MessageBox.Show("Nazwy działów i ich skróty muszą być unikalne.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                } else {  //w przypadku anulowania
+                    continueInput = false;
                 }
-                listBoxDepts.SelectedIndex = listBoxDepts.Items.Count - 1;
             }
         }
 
@@ -89,9 +98,18 @@ namespace AppMultisport {
             if (!((Dept) listBoxDepts.SelectedItem).ShortName.Equals(dialog.DeptName)) {
                 dialog.DeptShortName = ((Dept) listBoxDepts.SelectedItem).ShortName;
             }
-            if (dialog.ShowDialog() == DialogResult.OK) {
-                PreparedUpdate.Rename(listBoxDepts.SelectedIndex, dialog.DeptName, dialog.DeptShortName);
-                RefreshListBox();
+            bool continueInput = true;
+            while (continueInput) {
+                if (dialog.ShowDialog() == DialogResult.OK) {
+                    if (PreparedUpdate.RenameIfUnique(listBoxDepts.SelectedIndex, dialog.DeptName, dialog.DeptShortName)) {
+                        continueInput = false;
+                        RefreshListBox();
+                    } else {
+                        MessageBox.Show("Nazwy działów i ich skróty muszą być unikalne.", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                } else {  //w przypadku anulowania
+                    continueInput = false;
+                }
             }
         }
     }

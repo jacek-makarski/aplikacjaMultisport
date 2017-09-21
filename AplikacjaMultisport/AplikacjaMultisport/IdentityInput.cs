@@ -30,6 +30,14 @@ namespace AppMultisport {
                 }
             }
         }
+
+        private void textBoxFirstName_Validating(object sender, System.ComponentModel.CancelEventArgs e) {
+            textBoxFirstName.Text = textBoxFirstName.Text.Trim();
+        }
+
+        private void textBoxLastName_Validating(object sender, System.ComponentModel.CancelEventArgs e) {
+            textBoxLastName.Text = textBoxLastName.Text.Trim();
+        }
     }
 
 }

@@ -305,12 +305,22 @@ namespace AppMultisport {
                     }
                     foreach (EditedDept editedDept in update.EditedDepts) {
                         if (editedDept.Added) {
-                            SqlCommand command = new SqlCommand("INSERT INTO Departments (Name) OUTPUT INSERTED.DepartmentID VALUES (@deptName)", connection, transaction);
+                            SqlCommand command = new SqlCommand("INSERT INTO Departments (Name, ShortName) OUTPUT INSERTED.DepartmentID VALUES (@deptName, @shortDeptName)", connection, transaction);
                             command.Parameters.AddWithValue("@deptName", editedDept.Name);
+                            if (editedDept.ShortName.Equals(string.Empty)) {  //Skrócona nazwa jest opcjonalna
+                                command.Parameters.AddWithValue("@shortDeptName", DBNull.Value);
+                            } else {
+                                command.Parameters.AddWithValue("@shortDeptName", editedDept.ShortName);
+                            }
                             editedDept.DepartmentID = (int) command.ExecuteScalar();
                         } else if (editedDept.Renamed) {
                             SqlCommand command = new SqlCommand("UPDATE Departments SET Name = @newName, ShortName = @newShortName WHERE DepartmentID = @deptID", connection, transaction);
                             command.Parameters.AddWithValue("@newName", editedDept.Name);
+                            if (editedDept.ShortName.Equals(string.Empty)) {  //Skrócona nazwa jest opcjonalna
+                                command.Parameters.AddWithValue("@shortDeptName", DBNull.Value);
+                            } else {
+                                command.Parameters.AddWithValue("@shortDeptName", editedDept.ShortName);
+                            }
                             command.Parameters.AddWithValue("@newShortName", editedDept.ShortName);
                             command.Parameters.AddWithValue("@deptID", editedDept.DepartmentID);
                             command.ExecuteNonQuery();

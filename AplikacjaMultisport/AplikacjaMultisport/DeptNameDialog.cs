@@ -27,12 +27,17 @@ namespace AppMultisport {
         }
 
         private void textBoxDeptName_TextChanged(object sender, EventArgs e) {
-            buttonOK.Enabled = !textBoxDeptName.Text.Equals(string.Empty);
+            buttonOK.Enabled = !textBoxDeptName.Text.Trim().Equals(string.Empty);
         }
 
         private void DeptNameDialog_Shown(object sender, EventArgs e) {
             textBoxDeptName.SelectAll();
             textBoxDeptName.Focus();
+        }
+
+        private void DeptNameDialog_FormClosing(object sender, FormClosingEventArgs e) {
+            textBoxDeptName.Text = textBoxDeptName.Text.Trim();
+            textBoxDeptShortName.Text = textBoxDeptShortName.Text.Trim();
         }
     }
 }

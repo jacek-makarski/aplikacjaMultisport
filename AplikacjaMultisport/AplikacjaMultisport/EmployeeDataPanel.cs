@@ -50,6 +50,13 @@ namespace AppMultisport {
                 comboBoxNewDept.SelectedIndex = 0;
             }
         }
+
+        private void textBoxNewFirstName_Validating(object sender, System.ComponentModel.CancelEventArgs e) {
+            textBoxNewFirstName.Text = textBoxNewFirstName.Text.Trim();
+        }
         
+        private void textBoxNewLastName_Validating(object sender, System.ComponentModel.CancelEventArgs e) {
+            textBoxNewLastName.Text = textBoxNewLastName.Text.Trim();
+        }
     }
 }

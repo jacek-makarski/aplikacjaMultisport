@@ -113,6 +113,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Określ nazwę działu";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DeptNameDialog_FormClosing);
             this.Shown += new System.EventHandler(this.DeptNameDialog_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();

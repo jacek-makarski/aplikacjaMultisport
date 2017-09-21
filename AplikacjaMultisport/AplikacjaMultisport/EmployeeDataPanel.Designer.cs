@@ -82,6 +82,7 @@
             this.textBoxNewLastName.Name = "textBoxNewLastName";
             this.textBoxNewLastName.Size = new System.Drawing.Size(121, 20);
             this.textBoxNewLastName.TabIndex = 18;
+            this.textBoxNewLastName.Validating += new System.ComponentModel.CancelEventHandler(this.textBoxNewLastName_Validating);
             // 
             // textBoxNewFirstName
             // 
@@ -92,6 +93,7 @@
             this.textBoxNewFirstName.Name = "textBoxNewFirstName";
             this.textBoxNewFirstName.Size = new System.Drawing.Size(121, 20);
             this.textBoxNewFirstName.TabIndex = 17;
+            this.textBoxNewFirstName.Validating += new System.ComponentModel.CancelEventHandler(this.textBoxNewFirstName_Validating);
             // 
             // checkBoxNewDept
             // 
