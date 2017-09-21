@@ -25,11 +25,10 @@
         private void InitializeComponent() {
             this.listBoxDepts = new System.Windows.Forms.ListBox();
             this.buttonAddDept = new System.Windows.Forms.Button();
-            this.labelDeptName = new System.Windows.Forms.Label();
-            this.textBoxDeptName = new System.Windows.Forms.TextBox();
             this.buttonUp = new System.Windows.Forms.Button();
             this.buttonDown = new System.Windows.Forms.Button();
             this.buttonRemove = new System.Windows.Forms.Button();
+            this.buttonRename = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // listBoxDepts
@@ -57,34 +56,13 @@
             this.buttonAddDept.UseVisualStyleBackColor = true;
             this.buttonAddDept.Click += new System.EventHandler(this.buttonAddDept_Click);
             // 
-            // labelDeptName
-            // 
-            this.labelDeptName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelDeptName.AutoSize = true;
-            this.labelDeptName.Location = new System.Drawing.Point(127, 3);
-            this.labelDeptName.Name = "labelDeptName";
-            this.labelDeptName.Size = new System.Drawing.Size(72, 13);
-            this.labelDeptName.TabIndex = 2;
-            this.labelDeptName.Text = "Nazwa działu";
-            // 
-            // textBoxDeptName
-            // 
-            this.textBoxDeptName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDeptName.Location = new System.Drawing.Point(130, 19);
-            this.textBoxDeptName.Name = "textBoxDeptName";
-            this.textBoxDeptName.Size = new System.Drawing.Size(120, 20);
-            this.textBoxDeptName.TabIndex = 3;
-            this.textBoxDeptName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxDeptName_KeyDown);
-            this.textBoxDeptName.Validating += new System.ComponentModel.CancelEventHandler(this.textBoxDeptName_Validating);
-            this.textBoxDeptName.Validated += new System.EventHandler(this.textBoxDeptName_Validated);
-            // 
             // buttonUp
             // 
             this.buttonUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUp.Location = new System.Drawing.Point(151, 45);
             this.buttonUp.Name = "buttonUp";
-            this.buttonUp.Size = new System.Drawing.Size(75, 23);
-            this.buttonUp.TabIndex = 4;
+            this.buttonUp.Size = new System.Drawing.Size(83, 23);
+            this.buttonUp.TabIndex = 3;
             this.buttonUp.Text = "W górę";
             this.buttonUp.UseVisualStyleBackColor = true;
             this.buttonUp.Click += new System.EventHandler(this.buttonUp_Click);
@@ -94,8 +72,8 @@
             this.buttonDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonDown.Location = new System.Drawing.Point(151, 74);
             this.buttonDown.Name = "buttonDown";
-            this.buttonDown.Size = new System.Drawing.Size(75, 23);
-            this.buttonDown.TabIndex = 5;
+            this.buttonDown.Size = new System.Drawing.Size(83, 23);
+            this.buttonDown.TabIndex = 4;
             this.buttonDown.Text = "W dół";
             this.buttonDown.UseVisualStyleBackColor = true;
             this.buttonDown.Click += new System.EventHandler(this.buttonDown_Click);
@@ -105,28 +83,37 @@
             this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRemove.Location = new System.Drawing.Point(151, 119);
             this.buttonRemove.Name = "buttonRemove";
-            this.buttonRemove.Size = new System.Drawing.Size(75, 23);
-            this.buttonRemove.TabIndex = 6;
+            this.buttonRemove.Size = new System.Drawing.Size(83, 23);
+            this.buttonRemove.TabIndex = 5;
             this.buttonRemove.Text = "Usuń";
             this.buttonRemove.UseVisualStyleBackColor = true;
             this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
+            // 
+            // buttonRename
+            // 
+            this.buttonRename.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRename.Location = new System.Drawing.Point(151, 16);
+            this.buttonRename.Name = "buttonRename";
+            this.buttonRename.Size = new System.Drawing.Size(83, 23);
+            this.buttonRename.TabIndex = 2;
+            this.buttonRename.Text = "Zmień nazwę";
+            this.buttonRename.UseVisualStyleBackColor = true;
+            this.buttonRename.Click += new System.EventHandler(this.buttonRename_Click);
             // 
             // DeptEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.buttonRename);
             this.Controls.Add(this.buttonRemove);
             this.Controls.Add(this.buttonDown);
             this.Controls.Add(this.buttonUp);
-            this.Controls.Add(this.textBoxDeptName);
-            this.Controls.Add(this.labelDeptName);
             this.Controls.Add(this.buttonAddDept);
             this.Controls.Add(this.listBoxDepts);
             this.MinimumSize = new System.Drawing.Size(255, 158);
             this.Name = "DeptEdit";
             this.Size = new System.Drawing.Size(255, 158);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -134,10 +121,9 @@
 
         private System.Windows.Forms.ListBox listBoxDepts;
         private System.Windows.Forms.Button buttonAddDept;
-        private System.Windows.Forms.Label labelDeptName;
-        private System.Windows.Forms.TextBox textBoxDeptName;
         private System.Windows.Forms.Button buttonUp;
         private System.Windows.Forms.Button buttonDown;
         private System.Windows.Forms.Button buttonRemove;
+        private System.Windows.Forms.Button buttonRename;
     }
 }

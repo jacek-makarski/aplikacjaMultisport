@@ -6,10 +6,17 @@ namespace AppMultisport {
 
         public SqlInt32 DepartmentID { get; set; }
         public string Name { get; set; }
+        public string ShortName { get; set; }
 
         public Dept(SqlInt32 ID, string name) {
             DepartmentID = ID;
+            ShortName = Name = name;
+        }
+
+        public Dept(SqlInt32 ID, string name, string shortName) {
+            DepartmentID = ID;
             Name = name;
+            ShortName = shortName;
         }
 
         public override string ToString() {

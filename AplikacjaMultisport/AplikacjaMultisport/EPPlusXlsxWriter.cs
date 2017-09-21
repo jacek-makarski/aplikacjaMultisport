@@ -39,6 +39,14 @@ namespace AppMultisport {
             }
         }
 
+        private static string RetiredStr(int count) {
+            if (count == 1) {
+                return "emeryt";
+            } else {
+                return "emerytów";
+            }
+        }
+
         public void CreateOrOverwriteFile(string fileName, Report report) {
             FileInfo file = new FileInfo(fileName);
             if (file.Exists) {
@@ -167,10 +175,10 @@ namespace AppMultisport {
 
                 int employeeCounter = 1;
 
-                for(int i = 0; i < report.DeptReports.Count; ++i) {
+                for(int i = 0; i < report.EmployeesReport.DeptReports.Count; ++i) {
                     
                     //Nagłówek działu
-                    Report.DeptReport currentDeptReport = report.DeptReports[i];
+                    Report.DeptReport currentDeptReport = report.EmployeesReport.DeptReports[i];
                     int deptStartRow = rowCaret;
                     worksheet.Row(rowCaret).Height = 25.5;
                     worksheet.Cells[rowCaret, 2].Style.Font.Bold = true;
@@ -211,28 +219,48 @@ namespace AppMultisport {
 
                 //5. Podsumowanie wszystkich działów ----------
                 worksheet.Cells[rowCaret, 1].Value = Rules.MultiActivePrice + " zł (" + Rules.MultiActiveName + ")";
-                worksheet.Cells[rowCaret, 3].Value = report.MultiActiveCount + " x " + Rules.MultiActivePrice;
+                worksheet.Cells[rowCaret, 3].Value = report.MultiActiveNotRetiredCount + " x " + Rules.MultiActivePrice;
                 worksheet.Cells[rowCaret, 4].Style.Numberformat.Format = currencyFormat;
-                worksheet.Cells[rowCaret, 4].Value = Rules.MultiActivePrice * report.MultiActiveCount;
+                worksheet.Cells[rowCaret, 4].Value = Rules.MultiActivePrice * report.MultiActiveNotRetiredCount;
                 ++rowCaret;
 
                 worksheet.Cells[rowCaret, 1].Value = Rules.MultiPlusPrice + " zł (" + Rules.MultiPlusName + ")";
-                worksheet.Cells[rowCaret, 3].Value = report.MultiPlusCount + " x " + Rules.MultiPlusPrice;
+                worksheet.Cells[rowCaret, 3].Value = report.MultiPlusNotRetiredCount + " x " + Rules.MultiPlusPrice;
                 worksheet.Cells[rowCaret, 4].Style.Numberformat.Format = currencyFormat;
-                worksheet.Cells[rowCaret, 4].Value = Rules.MultiPlusPrice * report.MultiPlusCount;
+                worksheet.Cells[rowCaret, 4].Value = Rules.MultiPlusPrice * report.MultiPlusNotRetiredCount;
                 ++rowCaret;
 
+                int totalRow = rowCaret;
                 worksheet.Cells[rowCaret, 1].Value = "razem";
                 worksheet.Cells[rowCaret, 4].Style.Numberformat.Format = currencyFormat;
                 worksheet.Cells[rowCaret, 4].Formula = "SUM(D" + (rowCaret - 2) + ":D" + (rowCaret - 1) + ")";
-                ++rowCaret;
-                
-                //6. Podsumowanie dokumentu ----------
                 rowCaret += 2;
+
+                //6. Informacja o emerytach ----------
+                int retiredCount = report.EmployeesReport.RetiredEmployeesWithActiveCards.Count;
+                int retiredStartRow = rowCaret + 1;
+                worksheet.Cells[rowCaret, 1].Value = retiredCount + " " + RetiredStr(retiredCount) + " wpłaca do kasy" + ((retiredCount > 0) ? ":" : "");
+                ++rowCaret;
+                foreach (EmployeeWithCard currentEmployee in report.EmployeesReport.RetiredEmployeesWithActiveCards) {
+                    worksheet.Cells[rowCaret, 2].Value = currentEmployee.Employee.LastName;
+                    worksheet.Cells[rowCaret, 3].Value = currentEmployee.Employee.FirstName;
+                    worksheet.Cells[rowCaret, 4].Style.Numberformat.Format = currencyFormat;
+                    worksheet.Cells[rowCaret, 4].Value = Rules.CardPrice(currentEmployee.Card);
+                    ++rowCaret;
+                }
+                ++rowCaret;
+
+                //7. Podsumowanie dokumentu ----------
+                ++rowCaret;
                 worksheet.Cells[rowCaret, 1, rowCaret + 2, 4].Style.Font.Bold = true;
                 worksheet.Cells[rowCaret, 4, rowCaret + 2, 4].Style.Numberformat.Format = currencyFormat;
                 worksheet.Cells[rowCaret, 1].Value = "Podsumowanie ogółem:";
-                /*worksheet.Cells[rowCaret, 4].Value = */
+                if (retiredCount > 0) {
+                    worksheet.Cells[rowCaret, 4].Formula = "D" + totalRow + "+SUM(D" + retiredStartRow + ":D" + (retiredStartRow + retiredCount - 1) + ")";
+                } else {
+                    worksheet.Cells[rowCaret, 4].Formula = "D" + totalRow; 
+                }
+
                 ++rowCaret;
                 worksheet.Cells[rowCaret, 1].Value = "ZFŚS";
                 worksheet.Cells[rowCaret, 4].Formula = "D" + (rowCaret + 1) + "-D" + (rowCaret - 1);
@@ -241,7 +269,7 @@ namespace AppMultisport {
 
                 rowCaret += 2;
 
-                //7. Stopka ----------
+                //8. Stopka ----------
                 worksheet.Cells[rowCaret, 1].Value = "Opracował:";
                 ++rowCaret;
                 worksheet.Cells[rowCaret, 1].Value = "Dział:";
