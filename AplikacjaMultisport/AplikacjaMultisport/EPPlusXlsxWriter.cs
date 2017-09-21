@@ -264,8 +264,10 @@ namespace AppMultisport {
                 ++rowCaret;
                 worksheet.Cells[rowCaret, 1].Value = "ZFŚS";
                 worksheet.Cells[rowCaret, 4].Formula = "D" + (rowCaret + 1) + "-D" + (rowCaret - 1);
+
                 ++rowCaret;
                 worksheet.Cells[rowCaret, 1].Value = "Kwota faktury:";
+                worksheet.Cells[rowCaret, 4].Value = report.InvoiceTotal;
 
                 rowCaret += 2;
 

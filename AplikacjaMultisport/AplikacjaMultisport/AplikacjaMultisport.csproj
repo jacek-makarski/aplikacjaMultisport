@@ -92,6 +92,18 @@
     </Compile>
     <Compile Include="EditedDept.cs" />
     <Compile Include="DeptUpdate.cs" />
+    <Compile Include="InvoiceTotalDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InvoiceTotalDialog.Designer.cs">
+      <DependentUpon>InvoiceTotalDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InvoiceTotalUpDown.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="InvoiceTotalUpDown.Designer.cs">
+      <DependentUpon>InvoiceTotalUpDown.cs</DependentUpon>
+    </Compile>
     <Compile Include="MonthDateDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -148,6 +160,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DeptNameDialog.resx">
       <DependentUpon>DeptNameDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InvoiceTotalDialog.resx">
+      <DependentUpon>InvoiceTotalDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InvoiceTotalUpDown.resx">
+      <DependentUpon>InvoiceTotalUpDown.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MonthDateDialog.resx">
       <DependentUpon>MonthDateDialog.cs</DependentUpon>

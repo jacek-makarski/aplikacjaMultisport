@@ -17,11 +17,16 @@ CREATE TABLE Employees (
 )
 
 CREATE TABLE CardUpdates (
-	ValidationDate DATE NOT NULL,
+	ValidationDate DATE NOT NULL CHECK (DAY(ValidationDate) = 1),
 	EmployeeID INT FOREIGN KEY REFERENCES Employees(EmployeeID) ON DELETE CASCADE NOT NULL,
 	CardActivation BIT NOT NULL,
 	CardType BIT NOT NULL,
 	PRIMARY KEY (ValidationDate, EmployeeID)
+)
+
+CREATE TABLE InvoiceTotals (
+	InvoiceDate DATE PRIMARY KEY CHECK (DAY(InvoiceDate) = 1),
+	Total MONEY NOT NULL
 )
 
 CREATE INDEX EmployeeIndex ON CardUpdates (EmployeeID)
