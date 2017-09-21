@@ -58,6 +58,7 @@ RETURN SELECT
 	D.DepartmentID DeptID,
 	D.Ordering DeptOrdering,
 	D.Name DeptName,
+	D.ShortName ShortDeptName,
 	E.EmployeeID,
 	E.FirstName,
 	E.LastName,
@@ -126,3 +127,44 @@ RETURN SELECT
 			ON DatesOfJoining.MonthJoined = CU.ValidationDate AND DatesOfJoining.EmployeeID = CU.EmployeeID
 		JOIN Employees E
 			ON DatesOfJoining.EmployeeID = E.EmployeeID;
+
+GO
+CREATE FUNCTION dbo.ExtendedCardStatusTable(@DayStatusFor DATE, @NextValidationDate DATE) RETURNS TABLE AS
+RETURN SELECT
+	E.EmployeeID,
+	E.LastName,
+	E.FirstName,
+	E.Retirement,
+	D.DepartmentID,
+	D.Ordering,
+	D.Name DeptName,
+	D.ShortName DeptShortName,
+	CU.CardActivation,
+	CU.CardType,
+	Planned.CardActivation PlannedCardActivation,
+	Planned.CardType PlannedCardType
+	FROM
+		Employees E
+		LEFT JOIN (
+			SELECT 
+				MAX(ValidationDate) AS RecentValidationDate,
+				EmployeeID
+				FROM CardUpdates
+				WHERE ValidationDate <= @DayStatusFor
+				GROUP BY EmployeeID
+		) Recent
+			ON E.EmployeeID = Recent.EmployeeID
+		LEFT JOIN CardUpdates CU
+			ON CU.ValidationDate = Recent.RecentValidationDate AND CU.EmployeeID = Recent.EmployeeID
+		LEFT JOIN (
+			SELECT
+				EmployeeID,
+				CardActivation,
+				CardType
+				FROM CardUpdates
+				WHERE ValidationDate = @NextValidationDate
+		) Planned
+			ON E.EmployeeID = Planned.EmployeeID
+		LEFT JOIN Departments D  --LEFT JOIN, gdy¿ pracownicy emerytowani mog¹ nie mieæ okreœlonego dzia³u
+			ON E.DepartmentID = D.DepartmentID
+GO
